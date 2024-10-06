@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465785, g: 0.49641252, b: 0.574817, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -123,7 +123,7 @@ Prefab:
     - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
         type: 2}
       propertyPath: AudioClips.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 439642, guid: 8814ea52310d2614a9feda02ec355ae4, type: 2}
       propertyPath: m_LocalPosition.x
@@ -166,17 +166,17 @@ Prefab:
         type: 2}
       propertyPath: AudioClips.Array.data[0]
       value: 
-      objectReference: {fileID: 8300000, guid: 6d2d9c1d3bf38554cbaace224cbc437d, type: 3}
+      objectReference: {fileID: 8300000, guid: 3c757697b3e97064e98f656edb11c55b, type: 3}
     - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
         type: 2}
       propertyPath: AudioClips.Array.data[1]
       value: 
-      objectReference: {fileID: 8300000, guid: 0726c9877a0d5c44c9df0b2ec94a1b84, type: 3}
+      objectReference: {fileID: 8300000, guid: d9d4793f01f886748a17d623d6df7363, type: 3}
     - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
         type: 2}
       propertyPath: AudioClips.Array.data[2]
       value: 
-      objectReference: {fileID: 8300000, guid: a9d411fedf88e8b47b936ad689d50857, type: 3}
+      objectReference: {fileID: 8300000, guid: 0da7a0e9aa88e604ab3f996bf77e8db8, type: 3}
     - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
         type: 2}
       propertyPath: AudioClips.Array.data[3]
@@ -336,7 +336,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1602679724
+--- !u!1001 &1368626507
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -353,7 +353,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4041300201032840, guid: 734edb085853a4e4f9ecc631729e720a, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.0164
       objectReference: {fileID: 0}
     - target: {fileID: 4041300201032840, guid: 734edb085853a4e4f9ecc631729e720a, type: 2}
       propertyPath: m_LocalRotation.x
@@ -374,6 +374,11 @@ Prefab:
     - target: {fileID: 4041300201032840, guid: 734edb085853a4e4f9ecc631729e720a, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 108369206909838910, guid: 734edb085853a4e4f9ecc631729e720a,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 734edb085853a4e4f9ecc631729e720a, type: 2}

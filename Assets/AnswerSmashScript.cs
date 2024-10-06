@@ -19,6 +19,13 @@ public class AnswerSmashScript : MonoBehaviour {
     public Text[] displays;
     public MeshRenderer[] selectionOutlines;
 
+    public GameObject[] bulbs;
+    public Light[] bulbLights;
+
+    public Light spotlight;
+
+    public Material[] bulbStates;
+
     List<RepoEntry> entries = new List<RepoEntry>();
     KeyCode[] keyboardKeys = { KeyCode.BackQuote, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9, KeyCode.Alpha0, KeyCode.Minus, KeyCode.Equals, KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.T, KeyCode.Y, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P, KeyCode.LeftBracket, KeyCode.RightBracket, KeyCode.Backslash, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L, KeyCode.Semicolon, KeyCode.Quote, KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V, KeyCode.B, KeyCode.N, KeyCode.M, KeyCode.Comma, KeyCode.Period, KeyCode.Slash, KeyCode.Space };
     string typableCharacters = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./ ";
@@ -28,6 +35,8 @@ public class AnswerSmashScript : MonoBehaviour {
     bool failedToGen;
     bool focused;
     bool loading = true;
+
+    int cyclePos = 0;
     int selectedDisp;
 
     static int moduleIdCounter = 1;
@@ -51,6 +60,7 @@ public class AnswerSmashScript : MonoBehaviour {
     void Start()
     {
         StartCoroutine(LoadContentAndGenerate());
+        StartCoroutine(lightCycle());
     }
 
     void Update()
@@ -140,6 +150,62 @@ public class AnswerSmashScript : MonoBehaviour {
                     }
                 }
             }
+        }
+    }
+
+    IEnumerator lightCycle(){
+        for (int i = 0; i < bulbLights.Length; i++){
+            bulbLights[i].enabled = false;
+            bulbs[i].GetComponent<MeshRenderer>().material = bulbStates[0];
+        }
+
+        while (true){
+            for (int i = 0; i < bulbLights.Length; i++)
+            {
+                if(cyclePos == 0){
+                    bulbLights[i].enabled = (i % 3 == 0);
+                    bulbs[i].GetComponent<MeshRenderer>().material = bulbStates[1];
+                    for (int j = 1; j < bulbLights.Length; j += 3){
+                        bulbLights[j].enabled = false;
+                        bulbs[j].GetComponent<MeshRenderer>().material = bulbStates[0];
+                    }
+                    for (int k = 2; k < bulbLights.Length; k += 3){
+                        bulbLights[k].enabled = false;
+                        bulbs[k].GetComponent<MeshRenderer>().material = bulbStates[0];
+                    }
+                }
+                else if (cyclePos == 1){
+                    bulbLights[i].enabled = (i % 3 == 1);
+                    bulbs[i].GetComponent<MeshRenderer>().material = bulbStates[1];
+                    for (int j = 0; j < bulbLights.Length; j += 3)
+                    {
+                        bulbLights[j].enabled = false;
+                        bulbs[j].GetComponent<MeshRenderer>().material = bulbStates[0];
+                    }
+                    for (int k = 2; k < bulbLights.Length; k += 3)
+                    {
+                        bulbLights[k].enabled = false;
+                        bulbs[k].GetComponent<MeshRenderer>().material = bulbStates[0];
+                    }
+                }
+                else{
+                    bulbLights[i].enabled = (i % 3 == 2);
+                    bulbs[i].GetComponent<MeshRenderer>().material = bulbStates[1];
+                    for (int j = 0; j < bulbLights.Length; j += 3)
+                    {
+                        bulbLights[j].enabled = false;
+                        bulbs[j].GetComponent<MeshRenderer>().material = bulbStates[0];
+                    }
+                    for (int k = 1; k < bulbLights.Length; k += 3)
+                    {
+                        bulbLights[k].enabled = false;
+                        bulbs[k].GetComponent<MeshRenderer>().material = bulbStates[0];
+                    }
+                }
+            }
+            yield return new WaitForSeconds(0.15f);
+            cyclePos += 2;
+            cyclePos = cyclePos % 3;
         }
     }
 
