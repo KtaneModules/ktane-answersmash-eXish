@@ -35,6 +35,7 @@ public class AnswerSmashScript : MonoBehaviour {
     bool failedToGen;
     bool focused;
     bool loading = true;
+    bool subButton = false;
 
     int cyclePos = 0;
     int selectedDisp;
@@ -49,7 +50,7 @@ public class AnswerSmashScript : MonoBehaviour {
         foreach (KMSelectable obj in buttons)
         {
             KMSelectable pressed = obj;
-            pressed.OnInteract += delegate () { PressButton(pressed); return false; };
+            pressed.OnInteract += delegate () { StartCoroutine(PressButton(pressed)); return false; };
         }
         if (Application.isEditor)
             focused = true;
@@ -96,23 +97,26 @@ public class AnswerSmashScript : MonoBehaviour {
         }
     }
 
-    void PressButton(KMSelectable pressed)
+    IEnumerator PressButton(KMSelectable pressed)
     {
         if (moduleSolved != true && loading != true)
         {
             pressed.AddInteractionPunch();
             audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, pressed.transform);
             int index = Array.IndexOf(buttons, pressed);
+            
             if (index == 0)
                 selectedDisp = selectedDisp == 1 ? 0 : 1;
             else if (index == 1)
             {
+                subButton = true;
                 if (failedToGen)
                 {
                     moduleSolved = true;
                     selectionOutlines[0].enabled = false;
                     selectionOutlines[1].enabled = false;
                     Debug.LogFormat("[Answer Smash #{0}] Module solved!", moduleId);
+                    audio.PlaySoundAtTransform("DieSolveSound", transform);
                     GetComponent<KMBombModule>().HandlePass();
                 }
                 else
@@ -120,32 +124,56 @@ public class AnswerSmashScript : MonoBehaviour {
                     Debug.LogFormat("[Answer Smash #{0}] Submitted {1} & {2}", moduleId, displays[1].text, displays[2].text);
                     List<string> smashes1 = GetSmashedAnswers(displays[1].text, displays[2].text);
                     List<string> smashes2 = GetSmashedAnswers(displays[2].text, displays[1].text);
-                    if (entries.All(x => x.Name != displays[1].text))
+                    if (displays[1].text == "" || displays[2].text == "")
                     {
+                        Debug.LogFormat("[Answer Smash #{0}] Your answers cannot be blank, strike!", moduleId);
+                        audio.PlaySoundAtTransform("SkipToDie", transform);
+                        yield return new WaitForSeconds(4.0f);
+                        StartCoroutine(submissionAnim());
+                        yield return new WaitForSeconds(6.5f);
+                        GetComponent<KMBombModule>().HandleStrike();
+                    }
+                    else if (entries.All(x => x.Name != displays[1].text))
+                    {                        
+                        StartCoroutine(submissionAnim());
+                        yield return new WaitForSeconds(6.5f);
                         Debug.LogFormat("[Answer Smash #{0}] {1} is not a valid repository entry, strike!", moduleId, displays[1].text);
+                        audio.PlaySoundAtTransform("CouldntResist", transform);
                         GetComponent<KMBombModule>().HandleStrike();
                     }
                     else if (entries.All(x => x.Name != displays[2].text))
-                    {
+                    {                        
+                        StartCoroutine(submissionAnim());
+                        yield return new WaitForSeconds(6.5f);
                         Debug.LogFormat("[Answer Smash #{0}] {1} is not a valid repository entry, strike!", moduleId, displays[2].text);
+                        audio.PlaySoundAtTransform("CouldntResist", transform);
                         GetComponent<KMBombModule>().HandleStrike();
                     }
                     else if (displays[1].text == displays[2].text)
-                    {
+                    {                        
+                        StartCoroutine(submissionAnim());
+                        yield return new WaitForSeconds(6.5f);
                         Debug.LogFormat("[Answer Smash #{0}] Your answers cannot be the same repository entry, strike!", moduleId);
+                        audio.PlaySoundAtTransform("CouldntResist", transform);
                         GetComponent<KMBombModule>().HandleStrike();
                     }
                     else if (smashes1.Contains(generatedSmash) || smashes2.Contains(generatedSmash))
-                    {
+                    {                        
+                        StartCoroutine(submissionAnim());
+                        yield return new WaitForSeconds(6.5f);
                         moduleSolved = true;
                         selectionOutlines[0].enabled = false;
                         selectionOutlines[1].enabled = false;
                         Debug.LogFormat("[Answer Smash #{0}] Module solved!", moduleId);
+                        audio.PlaySoundAtTransform("DieSolveSound", transform);
                         GetComponent<KMBombModule>().HandlePass();
                     }
                     else
                     {
+                        StartCoroutine(submissionAnim());
+                        yield return new WaitForSeconds(6.5f);
                         Debug.LogFormat("[Answer Smash #{0}] Your answers cannot make the displayed answer smash, strike!", moduleId);
+                        audio.PlaySoundAtTransform("CouldntResist", transform);
                         GetComponent<KMBombModule>().HandleStrike();
                     }
                 }
@@ -159,7 +187,7 @@ public class AnswerSmashScript : MonoBehaviour {
             bulbs[i].GetComponent<MeshRenderer>().material = bulbStates[0];
         }
 
-        while (true){
+        while (subButton == false){
             for (int i = 0; i < bulbLights.Length; i++)
             {
                 if(cyclePos == 0){
@@ -206,7 +234,24 @@ public class AnswerSmashScript : MonoBehaviour {
             yield return new WaitForSeconds(0.15f);
             cyclePos += 2;
             cyclePos = cyclePos % 3;
+
+        }            
+        for (int i = 0; i < bulbLights.Length; i++)
+        {
+            bulbLights[i].enabled = false;
+            bulbs[i].GetComponent<MeshRenderer>().material = bulbStates[0];
         }
+    }
+
+    IEnumerator submissionAnim(){
+        audio.PlaySoundAtTransform("Lights_Camera_Action", transform);
+        yield return new WaitForSeconds(1.0f);
+        //SceneManager.Instance.GameplayState.Room.CeilingLight.TurnOff(false);
+        yield return new WaitForSeconds(2.2f);
+        spotlight.enabled = true;
+        yield return new WaitForSeconds(3.3f);
+        //SceneManager.Instance.GameplayState.Room.CeilingLight.TurnOff(true);
+        spotlight.enabled = false;
     }
 
     List<string> GetSmashedAnswers(string ans1, string ans2)
