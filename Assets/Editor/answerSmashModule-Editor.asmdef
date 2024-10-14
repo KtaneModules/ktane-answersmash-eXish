@@ -1,0 +1,10 @@
+{
+  "name": "answerSmashModule-Editor",
+  "references": [
+    "answerSmashModule"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": []
+}

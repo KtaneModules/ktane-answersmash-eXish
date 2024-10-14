@@ -1,0 +1,8 @@
+{
+  "name": "answerSmashModule",
+  "references": [
+    "GameProxies"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": []
+}

@@ -113,7 +113,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &286684101
+--- !u!1001 &60751244
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -157,40 +157,30 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114617884380056244, guid: 8814ea52310d2614a9feda02ec355ae4,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
         type: 2}
       propertyPath: AudioClips.Array.data[0]
       value: 
-      objectReference: {fileID: 8300000, guid: 3c757697b3e97064e98f656edb11c55b, type: 3}
+      objectReference: {fileID: 8300000, guid: 90ebea5bb0e93db43858a5c64888d70b, type: 3}
     - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
         type: 2}
       propertyPath: AudioClips.Array.data[1]
       value: 
-      objectReference: {fileID: 8300000, guid: d9d4793f01f886748a17d623d6df7363, type: 3}
+      objectReference: {fileID: 8300000, guid: 0da7a0e9aa88e604ab3f996bf77e8db8, type: 3}
     - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
         type: 2}
       propertyPath: AudioClips.Array.data[2]
       value: 
-      objectReference: {fileID: 8300000, guid: 0da7a0e9aa88e604ab3f996bf77e8db8, type: 3}
+      objectReference: {fileID: 8300000, guid: 3c757697b3e97064e98f656edb11c55b, type: 3}
     - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
         type: 2}
       propertyPath: AudioClips.Array.data[3]
       value: 
-      objectReference: {fileID: 8300000, guid: 90ebea5bb0e93db43858a5c64888d70b, type: 3}
-    - target: {fileID: 114617884380056244, guid: 8814ea52310d2614a9feda02ec355ae4,
-        type: 2}
-      propertyPath: ModSelectable
-      value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: d9d4793f01f886748a17d623d6df7363, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8814ea52310d2614a9feda02ec355ae4, type: 2}
   m_IsPrefabParent: 0
---- !u!1001 &334729237
+--- !u!1001 &603580699
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -207,7 +197,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4041300201032840, guid: 734edb085853a4e4f9ecc631729e720a, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -0.0164
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4041300201032840, guid: 734edb085853a4e4f9ecc631729e720a, type: 2}
       propertyPath: m_LocalRotation.x
