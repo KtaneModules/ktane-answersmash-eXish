@@ -36,6 +36,8 @@ public class AnswerSmashScript : MonoBehaviour {
     string typableCharacters = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./ ";
     string typableCharactersShift = "~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>? ";
     string generatedSmash;
+    string exampleSol1;
+    string exampleSol2;
     bool shiftDown;
     bool failedToGen;
     bool focused;
@@ -52,20 +54,20 @@ public class AnswerSmashScript : MonoBehaviour {
     void Start()
     {
         moduleId = moduleIdCounter++;
-        flashbang.enabled = false;
-        flashbang.intensity = 0;
+        float scalar = transform.lossyScale.x;
+        for (var i = 0; i < bulbLights.Length; i++)
+            bulbLights[i].range *= scalar;
+        spotlight.range *= scalar;
+        flashbang.range *= scalar;
         foreach (KMSelectable obj in buttons)
         {
             KMSelectable pressed = obj;
             pressed.OnInteract += delegate () { StartCoroutine(PressButton(pressed)); return false; };
         }
-        if (Application.isEditor)
-            focused = true;
         GetComponent<KMSelectable>().OnFocus += delegate () { focused = true; };
-        GetComponent<KMSelectable>().OnDefocus += delegate () { focused = false; };
+        GetComponent<KMSelectable>().OnDefocus += delegate () { focused = false; selectionOutlines[0].enabled = false; selectionOutlines[1].enabled = false; };
         StartCoroutine(LoadContentAndGenerate());
         StartCoroutine(lightCycle());
-
     }
 
     void Update()
@@ -103,7 +105,7 @@ public class AnswerSmashScript : MonoBehaviour {
 
     IEnumerator PressButton(KMSelectable pressed)
     {
-        if (moduleSolved != true && loading != true)
+        if (moduleSolved != true && loading != true && subButton != true)
         {
             pressed.AddInteractionPunch();
             audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, pressed.transform);
@@ -147,7 +149,6 @@ public class AnswerSmashScript : MonoBehaviour {
                         displays[2].transform.localPosition = new Vector3(-0.015f, -0.034f, -0.015f);
                         largeDisplays[1].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.0033f);
                         largeDisplays[2].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.034f);  
-                        selectionOutlines[0].enabled = true;
                         for (int i = 0; i < allBulbs.Length; i++)
                         {
                             allBulbs[i].SetActive(true);
@@ -172,7 +173,6 @@ public class AnswerSmashScript : MonoBehaviour {
                         displays[2].transform.localPosition = new Vector3(-0.015f, -0.034f, -0.015f);
                         largeDisplays[1].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.0033f);
                         largeDisplays[2].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.034f);
-                        selectionOutlines[0].enabled = true;
                         for (int i = 0; i < allBulbs.Length; i++)
                         {
                             allBulbs[i].SetActive(true);
@@ -197,7 +197,6 @@ public class AnswerSmashScript : MonoBehaviour {
                         displays[2].transform.localPosition = new Vector3(-0.015f, -0.034f, -0.015f);
                         largeDisplays[1].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.0033f);
                         largeDisplays[2].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.034f);
-                        selectionOutlines[0].enabled = true;
                         for (int i = 0; i < allBulbs.Length; i++)
                         {
                             allBulbs[i].SetActive(true);
@@ -222,7 +221,6 @@ public class AnswerSmashScript : MonoBehaviour {
                         displays[2].transform.localPosition = new Vector3(-0.015f, -0.034f, -0.015f);
                         largeDisplays[1].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.0033f);
                         largeDisplays[2].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.034f);
-                        selectionOutlines[0].enabled = true;
                         for (int i = 0; i < allBulbs.Length; i++)
                         {
                             allBulbs[i].SetActive(true);
@@ -270,7 +268,6 @@ public class AnswerSmashScript : MonoBehaviour {
                         displays[2].transform.localPosition = new Vector3(-0.015f, -0.034f, -0.015f);
                         largeDisplays[1].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.0033f);
                         largeDisplays[2].transform.localPosition = new Vector3(-0.015f, 0.012f, -0.034f);
-                        selectionOutlines[0].enabled = true;
                         for (int i = 0; i < allBulbs.Length; i++)
                         {
                             allBulbs[i].SetActive(true);
@@ -456,18 +453,20 @@ public class AnswerSmashScript : MonoBehaviour {
         {
             entries = ProcessJson(fetch.text);
             regen:
-            int choice1 = UnityEngine.Random.Range(0, entries.Count);
-            int choice2 = UnityEngine.Random.Range(0, entries.Count);
+            int choice1 = Rnd.Range(0, entries.Count);
+            int choice2 = Rnd.Range(0, entries.Count);
             while (choice1 == choice2)
-                choice2 = UnityEngine.Random.Range(0, entries.Count);
+                choice2 = Rnd.Range(0, entries.Count);
             List<string> allSmashes = GetSmashedAnswers(entries[choice1].Name, entries[choice2].Name);
             string allTypableCharacters = typableCharacters + typableCharactersShift;
             if (allSmashes.Count == 0 || entries[choice1].Name.Any(x => !allTypableCharacters.Contains(x)) || entries[choice2].Name.Any(x => !allTypableCharacters.Contains(x)))
                 goto regen;
+            exampleSol1 = entries[choice1].Name;
+            exampleSol2 = entries[choice2].Name;
             generatedSmash = allSmashes.PickRandom();
             displays[0].text = generatedSmash;
             Debug.LogFormat("[Answer Smash #{0}] The answer smash is {1}", moduleId, generatedSmash);
-            Debug.LogFormat("[Answer Smash #{0}] One possible solution is {1} & {2}", moduleId, entries[choice1].Name, entries[choice2].Name);
+            Debug.LogFormat("[Answer Smash #{0}] One possible solution is {1} & {2}", moduleId, exampleSol1, exampleSol2);
         }
         else
         {
@@ -487,6 +486,136 @@ public class AnswerSmashScript : MonoBehaviour {
             yield return new WaitForSeconds(1);
             displays[0].text = "";
             yield return new WaitForSeconds(1);
+        }
+    }
+
+    //twitch plays
+    #pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"!{0} type <text> [Types the specified text] | !{0} clear [Clears the text on the selected display] | !{0} toggle [Presses the toggle button] | !{0} submit [Presses the submit button]";
+    #pragma warning restore 414
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        if (command.EqualsIgnoreCase("toggle"))
+        {
+            if (subButton || loading)
+            {
+                yield return "sendtochaterror You can't press the toggle button right now!";
+                yield break;
+            }
+            yield return null;
+            buttons[0].OnInteract();
+            yield break;
+        }
+        if (command.EqualsIgnoreCase("submit"))
+        {
+            if (subButton || loading)
+            {
+                yield return "sendtochaterror You can't press the submit button right now!";
+                yield break;
+            }
+            yield return null;
+            yield return "solve";
+            yield return "strike";
+            buttons[1].OnInteract();
+            yield break;
+        }
+        if (command.EqualsIgnoreCase("clear"))
+        {
+            if (subButton || loading)
+            {
+                yield return "sendtochaterror You can't clear text right now!";
+                yield break;
+            }
+            yield return null;
+            while (displays[selectedDisp + 1].text != "")
+            {
+                displays[selectedDisp + 1].text = displays[selectedDisp + 1].text.Remove(displays[selectedDisp + 1].text.Length - 1, 1);
+                yield return new WaitForSeconds(.05f);
+            }
+            yield break;
+        }
+        string[] parameters = command.Split(' ');
+        if (parameters[0].EqualsIgnoreCase("type"))
+        {
+            if (parameters.Length == 1)
+                yield return "sendtochaterror Please specify some text to type!";
+            else
+            {
+                string input = command.Substring(5);
+                for (int i = 0; i < input.Length; i++)
+                {
+                    if (!typableCharacters.Contains(input[i]) && !typableCharactersShift.Contains(input[i]))
+                    {
+                        yield return "sendtochaterror The character " + input[i] + " cannot be typed!";
+                        yield break;
+                    }
+                }
+                if (subButton || loading)
+                {
+                    yield return "sendtochaterror You can't type text right now!";
+                    yield break;
+                }
+                yield return null;
+                for (int i = 0; i < input.Length; i++)
+                {
+                    displays[selectedDisp + 1].text += input[i];
+                    yield return new WaitForSeconds(.05f);
+                }
+            }
+        }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        while (loading) yield return true;
+        if (failedToGen)
+        {
+            buttons[1].OnInteract();
+            yield break;
+        }
+        if (subButton)
+        {
+            List<string> smashes1 = GetSmashedAnswers(displays[1].text, displays[2].text);
+            List<string> smashes2 = GetSmashedAnswers(displays[2].text, displays[1].text);
+            if (!(smashes1.Contains(generatedSmash) || smashes2.Contains(generatedSmash)))
+            {
+                StopAllCoroutines();
+                moduleSolved = true;
+                GetComponent<KMBombModule>().HandlePass();
+            }
+            else
+                while (!moduleSolved) yield return true;
+        }
+        else
+        {
+            while (!exampleSol1.StartsWith(displays[selectedDisp + 1].text))
+            {
+                displays[selectedDisp + 1].text = displays[selectedDisp + 1].text.Remove(displays[selectedDisp + 1].text.Length - 1, 1);
+                yield return new WaitForSeconds(.05f);
+            }
+            for (int i = displays[selectedDisp + 1].text.Length; i < exampleSol1.Length; i++)
+            {
+                displays[selectedDisp + 1].text += exampleSol1[i];
+                yield return new WaitForSeconds(.05f);
+            }
+            int otherDisp = selectedDisp == 0 ? 1 : 0;
+            if (exampleSol2 != displays[otherDisp + 1].text)
+            {
+                buttons[0].OnInteract();
+                yield return new WaitForSeconds(.05f);
+                while (!exampleSol2.StartsWith(displays[selectedDisp + 1].text))
+                {
+                    displays[selectedDisp + 1].text = displays[selectedDisp + 1].text.Remove(displays[selectedDisp + 1].text.Length - 1, 1);
+                    yield return new WaitForSeconds(.05f);
+                }
+                for (int i = displays[selectedDisp + 1].text.Length; i < exampleSol2.Length; i++)
+                {
+                    displays[selectedDisp + 1].text += exampleSol2[i];
+                    yield return new WaitForSeconds(.05f);
+                }
+            }
+            buttons[1].OnInteract();
+            while (!moduleSolved) yield return true;
         }
     }
 }

@@ -14,20 +14,11 @@ MonoBehaviour:
   id: answerSmashModule
   title: Answer Smash
   author: eXish
-  description: 'Determine what two entries on the repository of manual pages were
-    used to make an Answer Smash puzzle.
-
-
-    HTML: https://ktane.timwi.de/HTML/Answer%20Smash.html
-
-    PDF: https://ktane.timwi.de/PDF/Answer%20Smash.pdf
-
-
-    Answer Smash (answerSmashModule) v1.0.0
-
-    Module and Concept by eXish
-
-    Twitch Plays supported'
+  description: "Determine what two entries on the repository of manual pages were
+    used to make an Answer Smash puzzle.\n\nHTML: https://ktane.timwi.de/HTML/Answer%20Smash.html\nPDF:
+    https://ktane.timwi.de/PDF/Answer%20Smash.pdf\n\nAnswer Smash (answerSmashModule)
+    v1.0.0\nModule Idea by eXish\r\nModeling by Crazycaleb\nImplemented by eXish\nTwitch
+    Plays supported"
   version: 1.0.0
   outputFolder: build
-  previewImage: {fileID: 2800000, guid: c0b2ae231f11b024fafeeeb9603aa510, type: 3}
+  previewImage: {fileID: 2800000, guid: 2efc9b51d15dadd4ebb0aabc5e55c1df, type: 3}
