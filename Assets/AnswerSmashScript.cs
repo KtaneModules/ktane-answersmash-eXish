@@ -459,7 +459,7 @@ public class AnswerSmashScript : MonoBehaviour {
                 choice2 = Rnd.Range(0, entries.Count);
             List<string> allSmashes = GetSmashedAnswers(entries[choice1].Name, entries[choice2].Name);
             string allTypableCharacters = typableCharacters + typableCharactersShift;
-            if (allSmashes.Count == 0 || entries[choice1].Name.Any(x => !allTypableCharacters.Contains(x)) || entries[choice2].Name.Any(x => !allTypableCharacters.Contains(x)))
+            if (allSmashes.Count == 0 || entries[choice1].Name.Any(x => !allTypableCharacters.Contains(x)) || entries[choice2].Name.Any(x => !allTypableCharacters.Contains(x)) || entries[choice1].Translation || entries[choice2].Translation)
                 goto regen;
             exampleSol1 = entries[choice1].Name;
             exampleSol2 = entries[choice2].Name;
